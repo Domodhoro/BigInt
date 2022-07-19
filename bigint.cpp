@@ -28,8 +28,9 @@ BigInt& BigInt::operator=(const BigInt& rhs) {
 	return (* this);
 }
 
-ostream& operator<<(ostream& o, const BigInt& bigInt) {
-	for (int i = bigInt.m_digits.length() - 1; i >= 0; --i) {
+ostream& operator<<(ostream& os, const BigInt& bigInt) {
+	const int length = bigInt.m_digits.length();
+	for (int i = length - 1; i >= 0; --i) {
 		cout << static_cast<char>(bigInt.m_digits.at(i));
 	}
 
