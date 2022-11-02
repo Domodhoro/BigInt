@@ -2,19 +2,19 @@
 #include <stdexcept>
 #include <algorithm>
 
-using std::cout;
-using std::runtime_error;
-
 #include "bigint.hpp"
 
-BigInt::BigInt() : m_digits("0") {}
+namespace Math {
 
-BigInt::BigInt(const string& digits) : m_digits("") {
+BigInt::BigInt() : m_digits{"0"} {}
+
+BigInt::BigInt(const std::string& digits) : m_digits{""} {
     for (const auto& it : digits) {
         if (!isdigit(it)) {
-            throw runtime_error("Entrada inválida!");
+            throw std::runtime_error("Entrada inválida!");
         }
     }
+
     this->m_digits = digits;
 }
 
@@ -28,12 +28,12 @@ BigInt& BigInt::operator=(const BigInt& rhs) {
 	return (* this);
 }
 
-ostream& operator<<(ostream& os, const BigInt& bigInt) {
+std::ostream& operator<<(std::ostream& os, const BigInt& bigInt) {
 	for (const auto& it : bigInt.m_digits) {
-		cout << static_cast<char>(it);
+		std::cout << static_cast<char>(it);
 	}
 
-	return cout;
+	return std::cout;
 }
 
 bool operator==(const BigInt& lhs, const BigInt& rhs) {
@@ -45,7 +45,7 @@ bool operator!=(const BigInt& lhs, const BigInt& rhs) {
 }
 
 bool operator<(const BigInt& lhs, const BigInt& rhs) {
-	int n = lhs.m_digits.length(), m = rhs.m_digits.length();
+	int n {lhs.m_digits.length()}, m {rhs.m_digits.length()};
 
 	if (n != m) {
 		return n < m;
@@ -92,7 +92,7 @@ BigInt& operator-(BigInt& lhs, BigInt& rhs) {
     return lhs;
 }
 
-bool BigInt::null(const BigInt& rhs) const {
+bool BigInt::null(const BigInt& rhs) {
     if (rhs.m_digits.length() == 1 && rhs.m_digits.at(0) == 0) {
         return true;
     } else {
@@ -101,7 +101,7 @@ bool BigInt::null(const BigInt& rhs) const {
 }
 
 void BigInt::sum(BigInt& lhs, BigInt& rhs) {
-    int m = lhs.m_digits.length(), n = rhs.m_digits.length(), carry = 0;
+    int m {lhs.m_digits.length()}, n {rhs.m_digits.length()}, carry {0};
 
     if (m > n) {
         swap(lhs.m_digits, rhs.m_digits);
@@ -110,7 +110,7 @@ void BigInt::sum(BigInt& lhs, BigInt& rhs) {
     m = lhs.m_digits.length();
     n = rhs.m_digits.length();
 
-    string result = "";
+    std::string result {""};
 
     for (int i = m - 1; i >= 0; --i) {
         int sum = ((lhs.m_digits.at(i) - '0') + (rhs.m_digits.at(i + n - m) - '0') + carry);
@@ -134,8 +134,8 @@ void BigInt::sum(BigInt& lhs, BigInt& rhs) {
     lhs.m_digits = result;
 }
 
-auto minimum = [](const string& lhs, const string& rhs) {
-    int m = lhs.length(), n = rhs.length();
+auto minimum = [](const std::string& lhs, const std::string& rhs) {
+    int m {lhs.length()}, n {rhs.length()};
 
     if (m < n) {
         return true;
@@ -155,13 +155,13 @@ auto minimum = [](const string& lhs, const string& rhs) {
 };
 
 void BigInt::diff(BigInt& lhs, BigInt& rhs) {
-    int m = lhs.m_digits.length(), n = rhs.m_digits.length(), carry = 0;
+    int m {lhs.m_digits.length()}, n {rhs.m_digits.length()}, carry {0};
 
     if (minimum(lhs.m_digits, rhs.m_digits)) {
         swap(lhs.m_digits, rhs.m_digits);
     }
 
-    string result = "";
+    std::string result {""};
 
     for (int i = n - 1; i >= 0; --i) {
         int sub = ((lhs.m_digits.at(i + m - n) - '0') - (rhs.m_digits.at(i) - '0') - carry);
@@ -194,4 +194,6 @@ void BigInt::diff(BigInt& lhs, BigInt& rhs) {
 
     reverse(result.begin(), result.end());
     lhs.m_digits = result;
+}
+
 }

@@ -3,18 +3,19 @@
 
 #include <string>
 
-using std::string;
-using std::ostream;
+namespace Math {
 
 class BigInt {
 public:
     BigInt();
-    BigInt(const string&);
-    BigInt(const BigInt&);
+    BigInt(const std::string&);
 
+    BigInt(const BigInt&);
     BigInt& operator=(const BigInt&);
 
-    friend ostream& operator<<(ostream&, const BigInt&);
+    virtual ~BigInt() = default;
+
+    friend std::ostream& operator<<(std::ostream&, const BigInt&);
 
     friend bool operator==(const BigInt&, const BigInt&);
     friend bool operator!=(const BigInt&, const BigInt&);
@@ -32,11 +33,13 @@ public:
     friend BigInt& operator-(BigInt&, BigInt&);
 
 private:
-    string m_digits = "";
+    std::string m_digits {""};
 
-    static void sum(BigInt&, BigInt&), diff(BigInt&, BigInt&);
-
-    bool null(const BigInt&) const;
+    static void sum(BigInt&, BigInt&);
+    static void diff(BigInt&, BigInt&);
+    static bool null(const BigInt&);
 };
+
+}
 
 #endif
