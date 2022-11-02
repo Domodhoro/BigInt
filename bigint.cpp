@@ -113,14 +113,18 @@ void BigInt::sum(BigInt& lhs, BigInt& rhs) {
     std::string result {""};
 
     for (int i = m - 1; i >= 0; --i) {
-        int sum = ((lhs.m_digits.at(i) - '0') + (rhs.m_digits.at(i + n - m) - '0') + carry);
+        int sum {
+            ((lhs.m_digits.at(i) - '0') + (rhs.m_digits.at(i + n - m) - '0') + carry)
+        };
 
         result.push_back(sum % 10 + '0');
         carry = sum / 10;
     }
 
     for (int i = n - m - 1; i >= 0; --i) {
-        int sum = ((rhs.m_digits.at(i) - '0') + carry);
+        int sum {
+            ((rhs.m_digits.at(i) - '0') + carry)
+        };
 
         result.push_back(sum % 10 + '0');
         carry = sum / 10;
@@ -164,7 +168,7 @@ void BigInt::diff(BigInt& lhs, BigInt& rhs) {
     std::string result {""};
 
     for (int i = n - 1; i >= 0; --i) {
-        int sub = ((lhs.m_digits.at(i + m - n) - '0') - (rhs.m_digits.at(i) - '0') - carry);
+        int sub {((lhs.m_digits.at(i + m - n) - '0') - (rhs.m_digits.at(i) - '0') - carry)};
 
         if (sub < 0) {
             sub = sub + 10;
@@ -183,7 +187,7 @@ void BigInt::diff(BigInt& lhs, BigInt& rhs) {
             continue;
         }
 
-        int sub = ((lhs.m_digits.at(i) - '0') - carry);
+        int sub {((lhs.m_digits.at(i) - '0') - carry)};
 
         if (i > 0 || sub > 0) {
             result.push_back(sub + '0');
