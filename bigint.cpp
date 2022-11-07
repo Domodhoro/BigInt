@@ -11,7 +11,7 @@ BigInt::BigInt() : m_digits{"0"} {}
 BigInt::BigInt(const std::string& digits) : m_digits{""} {
     for (const auto& it : digits) {
         if (!isdigit(it)) {
-            throw std::runtime_error("Entrada inválida!");
+            throw std::runtime_error {"Entrada inválida!"};
         }
     }
 
