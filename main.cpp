@@ -1,22 +1,30 @@
 #include <iostream>
-#include <stdexcept>
+#include <string>
+#include <algorithm>
+#include <libgen.h>
 
-#include "bigint.hpp"
+struct my_exception {
+    my_exception(char *file, int line, const char *description) {
+        printf("Ops! Uma falha ocorreu...\n\n");
+        printf("File:        %s\n", basename(file));
+        printf("Line:        %i\n", line);
+        printf("Description: %s\n", description);
+    }
 
-int main() {
-	try {
-        Math::BigInt x {"1000000"}, y {"1"};
+    ~my_exception() {
+        exit(EXIT_FAILURE);
+    }
+};
 
-        auto z {x - y};
+#include "./bigint.hpp"
 
-        std::cout << "z = " << z;
-        std::cin.get();
+int main(int argc, char *argv[]) {
+	math::bigint x {"100000000000000000000000000"};
+	math::bigint y {"123456789"};
 
-        return 0;
-	} catch (const std::exception& e) {
-        std::cerr << e.what();
-        std::cin.get();
+    std::cout << x << " + " << y << " = " << x + y << std::endl;
 
-        return 1;
-	}
+    std::cin.get();
+
+    return 0;
 }
