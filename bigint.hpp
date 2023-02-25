@@ -6,41 +6,41 @@
 namespace math {
 
 struct bigint {
-    bigint() : m_digits{"0"} {}
+    bigint() : digits{"0"} {}
 
-    bigint(const std::string &digits) : m_digits{""} {
+    bigint(const std::string &digits) : digits{""} {
         for (auto &it : digits) if (!isdigit(it)) my_exception {__FILE__, __LINE__, "Entrada inválida!"};
 
-        this->m_digits = digits;
+        this->digits = digits;
     }
 
-    bigint(const bigint &rhs) { this->m_digits = rhs.m_digits; }
+    bigint(const bigint &rhs) { this->digits = rhs.digits; }
 
     bigint &operator=(const bigint &rhs) {
-        this->m_digits = rhs.m_digits;
+        this->digits = rhs.digits;
 
-        return (*this);
+        return *this;
     }
 
     ~bigint() = default;
 
     friend std::ostream &operator<<(std::ostream &os, const bigint &bigint) {
-        for (const auto &it : bigint.m_digits) std::cout << static_cast<char>(it);
+        for (const auto &it : bigint.digits) std::cout << static_cast<char>(it);
 
         return std::cout;
     }
 
-    friend bool operator==(const bigint &lhs, const bigint &rhs) { return lhs.m_digits == rhs.m_digits; }
+    friend bool operator==(const bigint &lhs, const bigint &rhs) { return lhs.digits == rhs.digits; }
     friend bool operator!=(const bigint &lhs, const bigint &rhs) { return !(lhs == rhs); }
 
     friend bool operator<(const bigint &lhs, const bigint &rhs) {
-        int n {lhs.m_digits.length()};
-        int m {rhs.m_digits.length()};
+        size_t n {lhs.digits.length()};
+        size_t m {rhs.digits.length()};
 
         if (n != m) return n < m;
 
         while (--n) {
-            if (lhs.m_digits.at(n) != rhs.m_digits.at(n)) return lhs.m_digits.at(n) < rhs.m_digits.at(n);
+            if (lhs.digits.at(n) != rhs.digits.at(n)) return lhs.digits.at(n) < rhs.digits.at(n);
         }
 
         return false;
@@ -65,7 +65,7 @@ struct bigint {
     }
 
 protected:
-    std::string m_digits {""};
+    std::string digits {""};
 
     static bool null(const bigint &rhs);
     static void sum (bigint &lhs, bigint &rhs);
@@ -73,25 +73,28 @@ protected:
 };
 
 bool bigint::null(const bigint &rhs) {
-    if (rhs.m_digits.length() == 1 && rhs.m_digits.at(0) == 0) return true;
-    else                                                       return false;
+    if (rhs.digits.length() == 1 && rhs.digits.at(0) == 0) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 void bigint::sum(bigint &lhs, bigint &rhs) {
-    int m     {lhs.m_digits.length()};
-    int n     {rhs.m_digits.length()};
+    size_t m  {lhs.digits.length()};
+    size_t n  {rhs.digits.length()};
     int carry {0};
 
-    if (m > n) std::swap(lhs.m_digits, rhs.m_digits);
+    if (m > n) std::swap(lhs.digits, rhs.digits);
 
-    m = lhs.m_digits.length();
-    n = rhs.m_digits.length();
+    m = lhs.digits.length();
+    n = rhs.digits.length();
 
     std::string result {""};
 
     for (int i = m - 1; i >= 0; --i) {
         int sum {
-            ((lhs.m_digits.at(i) - '0') + (rhs.m_digits.at(i + n - m) - '0') + carry)
+            ((lhs.digits.at(i) - '0') + (rhs.digits.at(i + n - m) - '0') + carry)
         };
 
         result.push_back(sum % 10 + '0');
@@ -100,7 +103,7 @@ void bigint::sum(bigint &lhs, bigint &rhs) {
     }
 
     for (int i = n - m - 1; i >= 0; --i) {
-        int sum {((rhs.m_digits.at(i) - '0') + carry)};
+        int sum {((rhs.digits.at(i) - '0') + carry)};
 
         result.push_back(sum % 10 + '0');
 
@@ -111,35 +114,41 @@ void bigint::sum(bigint &lhs, bigint &rhs) {
 
     std::reverse(result.begin(), result.end());
 
-    lhs.m_digits = result;
+    lhs.digits = result;
 }
 
 static auto minimum = [](const std::string &lhs, const std::string &rhs) -> bool {
     auto m {lhs.length()};
     auto n {rhs.length()};
 
-    if (m < n) return true;
-    else       return false;
+    if (m < n) {
+        return true;
+    } else {
+        return false;
+    }
 
-    for (int i = 0; i < m; ++i) {
-        if      (lhs.at(i) < rhs.at(i)) return true;
-        else if (lhs.at(i) > rhs.at(i)) return false;
+    for (size_t i = 0; i < m; ++i) {
+        if (lhs.at(i) < rhs.at(i)) {
+            return true;
+        } else if (lhs.at(i) > rhs.at(i)) {
+            return false;
+        }
     }
 
     return false;
 };
 
 void bigint::diff(bigint &lhs, bigint &rhs) {
-    int m     {lhs.m_digits.length()};
-    int n     {rhs.m_digits.length()};
+    size_t m  {lhs.digits.length()};
+    size_t n  {rhs.digits.length()};
     int carry {0};
 
-    if (minimum(lhs.m_digits, rhs.m_digits)) std::swap(lhs.m_digits, rhs.m_digits);
+    if (minimum(lhs.digits, rhs.digits)) std::swap(lhs.digits, rhs.digits);
 
     std::string result {""};
 
     for (int i = n - 1; i >= 0; --i) {
-        int sub {((lhs.m_digits.at(i + m - n) - '0') - (rhs.m_digits.at(i) - '0') - carry)};
+        int sub {((lhs.digits.at(i + m - n) - '0') - (rhs.digits.at(i) - '0') - carry)};
 
         if (sub < 0) {
             sub   += 10;
@@ -152,13 +161,13 @@ void bigint::diff(bigint &lhs, bigint &rhs) {
     }
 
     for (int i = m - n - 1; i >= 0; --i) {
-        if (lhs.m_digits.at(i) == '0' && carry) {
+        if (lhs.digits.at(i) == '0' && carry) {
             result.push_back('9');
 
             continue;
         }
 
-        int sub {((lhs.m_digits.at(i) - '0') - carry)};
+        int sub {((lhs.digits.at(i) - '0') - carry)};
 
         if (i > 0 || sub > 0) result.push_back(sub + '0');
 
@@ -167,7 +176,7 @@ void bigint::diff(bigint &lhs, bigint &rhs) {
 
     std::reverse(result.begin(), result.end());
 
-    lhs.m_digits = result;
+    lhs.digits = result;
 }
 
 }
