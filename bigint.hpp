@@ -64,7 +64,7 @@ struct bigint {
         return lhs;
     }
 
-private:
+protected:
     std::string m_digits {""};
 
     static bool null(const bigint &rhs);
