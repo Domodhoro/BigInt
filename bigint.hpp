@@ -9,7 +9,7 @@ struct bigint {
     bigint() : digits{"0"} {}
 
     bigint(const std::string &digits) : digits{""} {
-        for (auto &it : digits) if (!isdigit(it)) my_exception {__FILE__, __LINE__, "Entrada inválida!"};
+        for (auto &it : digits) if (!isdigit(it)) error_log(__FILE__, __LINE__, "Entrada inválida!");
 
         this->digits = digits;
     }
